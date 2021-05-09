@@ -7,7 +7,7 @@ import { MoviesService } from './movies.service';
 import { StringService } from './string.service';
 
 import { MoviesController } from './movies.controller';
-import configuration from './../config/configuration';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
