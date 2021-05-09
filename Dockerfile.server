@@ -5,4 +5,5 @@ COPY ./server/package*.json ./
 RUN yarn install
 COPY ./server .
 RUN yarn build
-RUN yarn start:prod
+CMD ["yarn", "start:prod"]
+EXPOSE 80
