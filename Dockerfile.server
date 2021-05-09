@@ -2,11 +2,11 @@ FROM node:14-alpine As development
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json ./server
 
 RUN npm install --only=development
 
-COPY . .
+COPY ./server .
 
 RUN npm run build
 
@@ -17,11 +17,11 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json ./server
 
 RUN npm install --only=production
 
-COPY . .
+COPY ./server .
 
 COPY --from=development /usr/src/app/dist ./dist
 
