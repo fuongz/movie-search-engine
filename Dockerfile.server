@@ -4,6 +4,5 @@ WORKDIR /usr/src/app
 COPY ./server/package*.json ./
 RUN yarn install
 COPY ./server .
-RUN yarn add -g rimraf
 RUN yarn build
 RUN yarn start:prod
