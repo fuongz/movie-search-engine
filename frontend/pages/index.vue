@@ -213,7 +213,7 @@ export default defineComponent({
           )
         }
         busy.searching = true
-        const response = await $axios.get(`/api/movies?q=${form.value.q}`)
+        const response = await $axios.get(`/movies?q=${form.value.q}`)
         const responseBody = response.data
         results.value = responseBody
         busy.searching = false

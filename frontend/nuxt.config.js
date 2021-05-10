@@ -44,14 +44,7 @@ export default {
   },
 
   axios: {
-    proxy: true,
-  },
-
-  proxy: {
-    '/api': {
-      target: process.env.API_URL,
-      pathRewrite: { '^/api': '/' },
-    },
+    baseURL: process.env.API_URL,
   },
 
   build: {},
