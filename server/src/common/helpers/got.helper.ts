@@ -3,7 +3,7 @@ import { HttpService, Injectable } from '@nestjs/common';
 import cheerio from 'cheerio';
 
 @Injectable()
-export class GotService {
+export class GotHelper {
   constructor(private httpService: HttpService) {}
 
   private gotOptions: any = {

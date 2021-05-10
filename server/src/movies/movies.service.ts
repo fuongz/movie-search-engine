@@ -1,21 +1,13 @@
 import { HttpService, Injectable } from '@nestjs/common';
+import { GotHelper, StringHelper } from 'src/common/helpers';
 
-import { GotService } from './got.service';
-import { StringService } from './string.service';
-
-interface Movie {
-  title: string;
-  url: string;
-  thumbnail: string;
-  isMovieTrailer: boolean;
-  isMovieSeries: boolean;
-}
+import { Movie } from './interfaces/movie.interface';
 
 @Injectable()
 export class MoviesService {
   constructor(
-    private gotService: GotService,
-    private stringService: StringService,
+    private gotService: GotHelper,
+    private stringService: StringHelper,
     private httpService: HttpService,
   ) {}
 

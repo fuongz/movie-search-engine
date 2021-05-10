@@ -1,22 +1,37 @@
 import { Module, HttpModule } from '@nestjs/common';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { GotService } from './got.service';
-import { MoviesService } from './movies.service';
-import { StringService } from './string.service';
 
-import { MoviesController } from './movies.controller';
+// Config
 import configuration from './config/configuration';
+
+// Modules
+import { CommonModule } from './common/common.module';
+import { MoviesModule } from './movies/movies.module';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
     }),
+
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 60,
+    }),
+
     HttpModule,
+    CommonModule,
+
+    MoviesModule,
   ],
-  controllers: [AppController, MoviesController],
-  providers: [AppService, MoviesService, StringService, GotService],
+  controllers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
