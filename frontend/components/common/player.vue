@@ -1,7 +1,16 @@
 <template>
   <video
+    id="player"
     ref="playerRef"
-    class="video-js vjs-default-skin rounded w-full md:min-h-20"
+    class="
+      video-js
+      vjs-default-skin
+      w-full
+      md:min-h-20
+      rounded
+      overflow-hidden
+      shadow-xl
+    "
   />
 </template>
 
@@ -44,6 +53,10 @@ export default defineComponent({
             type: 'application/x-mpegURL',
           })
           player.value.play()
+
+          const $ele = document.querySelector('#current-video')
+          const y = $ele.getBoundingClientRect().top + window.pageYOffset - 60
+          window.scrollTo({ top: y, behavior: 'smooth' })
 
           if ($device.isMobileOrTablet) {
             player.value.requestFullscreen()

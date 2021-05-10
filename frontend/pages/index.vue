@@ -1,7 +1,6 @@
 <template>
   <div class="w-full max-w-5xl text-center mx-auto pt-16 xl:px-0 px-4">
     <div
-      v-if="!checkImportantNotice"
       class="
         fixed
         top-0
@@ -26,12 +25,6 @@
       <span>
         Dự án này sinh ra cho mục đích nghiên cứu, nghiêm cấm thương mại hóa
         dưới mọi hình thức.
-      </span>
-      <span
-        class="font-bold ml-8 cursor-pointer hover:underline whitespace-nowrap"
-        @click.prevent.stop="hideNotice"
-      >
-        OK, Hiểu!
       </span>
     </div>
 
@@ -62,18 +55,31 @@
         v-if="errors"
         class="
           mb-4
-          border border-pink-400
-          bg-pink-100
-          text-pink-700
+          border border-red-400
+          bg-red-50
+          text-red-600
           rounded
-          font-medium
-          px-4
+          pl-1.5
+          pr-4
           py-2
+          text-left
           relative
         "
       >
-        <span class="uppercase tracking-tight font-bold mr-4 text-sm">
-          📢 Alo alo:
+        <span
+          class="
+            tracking-tight
+            font-bold
+            mr-4
+            text-sm
+            bg-red-600
+            text-white
+            px-1.5
+            py-1.5
+            rounded
+          "
+        >
+          🐛 Error!
         </span>
         {{ errors }} <b>(￣ ￣|||)</b>
       </div>
@@ -114,7 +120,7 @@
               disabled:cursor-wait
             "
             :class="{
-              'ring-pink-600 ring-2 border-transparent':
+              'ring-red-600 ring-2 border-transparent':
                 errors && (form.q === null || form.q === ''),
             }"
             :disabled="busy.searching"
@@ -153,13 +159,10 @@
         </div>
       </elements-overlay>
 
-      <common-inspire />
+      <common-inspire v-if="!results" />
     </div>
 
-    <div
-      v-show="selectedMovie"
-      class="my-8 bg-pink-50 border-pink-600 border p-4 rounded"
-    >
+    <div v-show="selectedMovie" id="current-video" class="my-8">
       <p class="text-center font-bold text-sm uppercase text-gray-500 mb-4">
         ヽ(￣～￣)ノ Yolo!
       </p>
@@ -171,7 +174,7 @@
       <common-player :data="selectedMovie" />
     </div>
 
-    <div v-if="results" class="my-8">
+    <div v-if="results" id="results" class="my-8">
       <p class="text-left text-gray-700">
         Có tất cả <b>{{ results.length }}</b> kết quả:
       </p>
@@ -239,6 +242,11 @@ export default defineComponent({
       try {
         errors.value = null
         if (!form.value.q || form.value.q === '') {
+          router.push({
+            query: {
+              q: null,
+            },
+          })
           throw new Error('Viết đại cái gì đó cũng được mà.')
         }
         router.push({
@@ -263,7 +271,7 @@ export default defineComponent({
           )
         }
         busy.searching = true
-        const response = await $axios.get(`/movies?q=${form.value.q}`)
+        const response = await $axios.get(`?q=${form.value.q}`)
         const responseBody = response.data
         if (Array.isArray(responseBody) && responseBody.length === 0) {
           throw new Error(
@@ -272,6 +280,12 @@ export default defineComponent({
         }
         results.value = responseBody
         busy.searching = false
+
+        const $ele = document.querySelector('#results')
+        if ($ele) {
+          const y = $ele.getBoundingClientRect().top + window.pageYOffset - 60
+          window.scrollTo({ top: y, behavior: 'smooth' })
+        }
       } catch (err) {
         busy.searching = false
         results.value = null
