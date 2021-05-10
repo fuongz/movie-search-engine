@@ -6,6 +6,7 @@ import { StringService } from './string.service';
 interface Movie {
   title: string;
   url: string;
+  thumbnail: string;
   isMovieSeries: boolean;
 }
 
@@ -68,11 +69,21 @@ export class MoviesService {
           const url = $(elem).find('a.film-title').attr('href');
           const title = $(elem).find('a.film-title').text();
           const subText = $(elem).find('div.film-tag > .sub').text();
+          let thumbnail = $(elem)
+            .find('a.film-cover > .poster')
+            .css('background-image');
+
+          if (thumbnail) {
+            thumbnail = thumbnail
+              .replace('url(', '')
+              .replace(')', '')
+              .replace(/\"/gi, '');
+          }
           const isMovieSeries =
             this.stringService.nonAccentVietnamese(subText).indexOf('tap') !==
             -1;
 
-          return { url, title, isMovieSeries };
+          return { url, title, thumbnail, isMovieSeries };
         })
         .get()
         .filter(
@@ -99,6 +110,7 @@ export class MoviesService {
                 episode !== null
                   ? `${movie.title} - Tập ${episode}`
                   : movie.title,
+              thumbnail: movie.thumbnail,
               url: m3u8Url,
               cdn: vid.host,
             };
