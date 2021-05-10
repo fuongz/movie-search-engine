@@ -1,6 +1,9 @@
 <template>
-  <div v-if="data" class="relative pb-16">
-    <div class="relative w-full h-72 movie__thumbnail">
+  <div
+    v-if="data"
+    class="relative pb-4 md:pb-16 border-b border-gray-300 md:border-none"
+  >
+    <div class="relative rounded hidden md:block w-full h-72 movie__thumbnail">
       <img
         class="w-full h-full object-cover shadow"
         :src="data.thumbnail"
@@ -50,11 +53,21 @@
       </div>
     </div>
 
-    <h5 class="font-medium text-sm tracking-tight pt-4 line-clamp-2">
+    <h5
+      class="
+        text-left
+        md:text-center
+        font-medium
+        text-sm
+        tracking-tight
+        md:pt-4
+        line-clamp-2
+      "
+    >
       {{ data.title }}
     </h5>
 
-    <div class="absolute bottom-0 w-full">
+    <div class="relative md:absolute bottom-0 w-full">
       <button
         class="
           cursor-pointer
@@ -83,7 +96,7 @@
     </div>
   </div>
 </template>
-<script lang="ts">
+<script>
 import { defineComponent } from '@nuxtjs/composition-api'
 import IconPlay from '~/assets/svg/icon-play.svg?inline'
 export default defineComponent({

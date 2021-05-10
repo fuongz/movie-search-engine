@@ -1,5 +1,40 @@
 <template>
   <div class="w-full max-w-5xl text-center mx-auto pt-16 xl:px-0 px-4">
+    <div
+      v-if="!checkImportantNotice"
+      class="
+        fixed
+        top-0
+        z-50
+        text-left
+        md:text-center
+        bg-white
+        w-full
+        border-b border-pink-200
+        left-0
+        px-4
+        py-2
+        text-xs
+        md:text-sm
+        text-pink-600
+        bg-pink-50
+        flex
+        justify-center
+        items-center
+      "
+    >
+      <span>
+        Dự án này sinh ra cho mục đích nghiên cứu, nghiêm cấm thương mại hóa
+        dưới mọi hình thức.
+      </span>
+      <span
+        class="font-bold ml-8 cursor-pointer hover:underline whitespace-nowrap"
+        @click.prevent.stop="hideNotice"
+      >
+        OK, Hiểu!
+      </span>
+    </div>
+
     <div class="flex justify-center">
       <img
         src="https://i.pinimg.com/564x/71/1f/e6/711fe62a75e00ae9e60eada3da044130.jpg"
@@ -11,7 +46,18 @@
       The free "<b>forever</b>" movie search engine
     </p>
 
-    <div class="mt-16 max-w-3xl mx-auto">
+    <div class="mt-4">
+      <a
+        href="https://github.com/senpp/movie-search-engine"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="senpp/movie-search-engine"
+      >
+        <icon-github class="w-6 h-6 text-gray-300 fill-current" />
+      </a>
+    </div>
+
+    <div class="mt-8 xl:mt-16 max-w-3xl mx-auto">
       <div
         v-if="errors"
         class="
@@ -47,12 +93,12 @@
           <input
             v-model="form.q"
             type="text"
-            placeholder="Nhập tên phim và bấm Enter để tìm kiếm"
+            placeholder="Nhấn Enter để tìm kiếm"
             class="
               block
               w-full
               pl-12
-              pr-4
+              pr-16
               py-2
               border border-gray-300
               text-gray-600
@@ -79,8 +125,8 @@
               border
               bg-gray-50
               text-gray-400
-              py-0.5
-              px-1.5
+              py-1
+              px-2
               rounded
               absolute
               right-2
@@ -88,6 +134,7 @@
               transform
               -translate-y-1/2
               z-1
+              text-xs
               transition
               hover:transition
               hover:bg-gray-100
@@ -105,11 +152,13 @@
           </button>
         </div>
       </elements-overlay>
+
+      <common-inspire />
     </div>
 
     <div
       v-show="selectedMovie"
-      class="my-8 bg-pink-50 border-pink-600 border p-4"
+      class="my-8 bg-pink-50 border-pink-600 border p-4 rounded"
     >
       <p class="text-center font-bold text-sm uppercase text-gray-500 mb-4">
         ヽ(￣～￣)ノ Yolo!
@@ -122,12 +171,11 @@
       <common-player :data="selectedMovie" />
     </div>
 
-    <div v-show="results" class="my-8">
+    <div v-if="results" class="my-8">
       <p class="text-left text-gray-700">
-        Có tất cả <b>{{ results && results.length }}</b> kết quả:
+        Có tất cả <b>{{ results.length }}</b> kết quả:
       </p>
       <div
-        v-if="results && results.length > 0"
         class="
           grid
           gap-4
@@ -153,14 +201,16 @@ import {
   onMounted,
   reactive,
   ref,
+  computed,
   useContext,
   useRoute,
   useRouter,
 } from '@nuxtjs/composition-api'
 import IconSearch from '~/assets/svg/icon-search.svg?inline'
+import IconGithub from '~/assets/svg/icon-github.svg?inline'
 
 export default defineComponent({
-  components: { IconSearch },
+  components: { IconSearch, IconGithub },
   setup() {
     const busy = reactive({
       searching: false,
@@ -215,10 +265,16 @@ export default defineComponent({
         busy.searching = true
         const response = await $axios.get(`/movies?q=${form.value.q}`)
         const responseBody = response.data
+        if (Array.isArray(responseBody) && responseBody.length === 0) {
+          throw new Error(
+            'Kiếm thử bộ khác đi người anh em, bộ này kiếm hoài không ra...'
+          )
+        }
         results.value = responseBody
         busy.searching = false
       } catch (err) {
         busy.searching = false
+        results.value = null
         errors.value = err.message
       }
     }
@@ -226,6 +282,22 @@ export default defineComponent({
     const setSelectedMovie = (movie) => {
       if (movie) selectedMovie.value = movie
     }
+
+    const hideNotice = () => {
+      if (process.browser) {
+        localStorage.setItem('acceptedImportantNotice', true)
+      }
+    }
+
+    const checkImportantNotice = computed(() => {
+      if (process.browser) {
+        const acceptedImportantNotice = localStorage.getItem(
+          'acceptedImportantNotice'
+        )
+        return acceptedImportantNotice === 'true'
+      }
+      return false
+    })
 
     return {
       search,
@@ -235,6 +307,8 @@ export default defineComponent({
       results,
       setSelectedMovie,
       selectedMovie,
+      hideNotice,
+      checkImportantNotice,
     }
   },
 })

@@ -27,6 +27,7 @@ export default {
     '@nuxt/typescript-build',
     'nuxt-windicss',
     '@nuxtjs/google-fonts',
+    '@nuxtjs/device',
     '@nuxtjs/composition-api/module',
   ],
 
