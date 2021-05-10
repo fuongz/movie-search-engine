@@ -6,14 +6,14 @@ export default {
   },
 
   head: {
-    title: 'Phim Phake: The The free forever movie search engine',
+    title: 'Phim Phake: The free forever movie search engine',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: 'The The free forever movie search engine',
+        content: 'The free forever movie search engine',
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],

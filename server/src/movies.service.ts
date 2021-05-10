@@ -7,6 +7,7 @@ interface Movie {
   title: string;
   url: string;
   thumbnail: string;
+  isMovieTrailer: boolean;
   isMovieSeries: boolean;
 }
 
@@ -83,13 +84,19 @@ export class MoviesService {
             this.stringService.nonAccentVietnamese(subText).indexOf('tap') !==
             -1;
 
-          return { url, title, thumbnail, isMovieSeries };
+          const isMovieTrailer =
+            this.stringService
+              .nonAccentVietnamese(subText)
+              .indexOf('trailer') !== -1;
+
+          return { url, title, thumbnail, isMovieSeries, isMovieTrailer };
         })
         .get()
         .filter(
           (e: Movie) =>
             typeof e !== 'undefined' &&
             e.title !== '' &&
+            !e.isMovieTrailer &&
             e.isMovieSeries === (episode !== null),
         );
 
@@ -98,13 +105,7 @@ export class MoviesService {
           const vid = await this.getEpisode(movie.url, episode);
           if (vid?.data !== null) {
             const vod = 2;
-            const m3u8Url =
-              vid.host +
-              '/vod/v' +
-              vod +
-              '/packaged:mp4/' +
-              vid.mid +
-              '/playlist.m3u8';
+            const m3u8Url = `${vid.host}/vod/v${vod}//packaged:mp4/${vid.mid}/playlist.m3u8`;
             return {
               title:
                 episode !== null
