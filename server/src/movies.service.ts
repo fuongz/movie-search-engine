@@ -105,7 +105,8 @@ export class MoviesService {
           const vid = await this.getEpisode(movie.url, episode);
           if (vid?.data !== null) {
             const vod = 2;
-            const m3u8Url = `${vid.host}/vod/v${vod}//packaged:mp4/${vid.mid}/playlist.m3u8`;
+            const m3u8Url = `${vid.host}/vod/v${vod}/packaged:mp4/${vid.mid}/playlist.m3u8`;
+
             return {
               title:
                 episode !== null
