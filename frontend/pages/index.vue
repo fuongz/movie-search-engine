@@ -20,6 +20,10 @@
         flex
         justify-center
         items-center
+        transition
+        dark:transition
+        dark:bg-gray-900
+        dark:border-pink-900
       "
     >
       <span>
@@ -28,12 +32,22 @@
       </span>
     </div>
 
-    <div class="flex justify-center">
-      <img
-        src="https://i.pinimg.com/564x/71/1f/e6/711fe62a75e00ae9e60eada3da044130.jpg"
-        alt=""
-        class="w-40 shadow-xl border-2 border-gray-500 rounded"
-      />
+    <div id="logo" class="flex justify-center">
+      <nuxt-link to="/">
+        <img
+          src="https://i.pinimg.com/564x/71/1f/e6/711fe62a75e00ae9e60eada3da044130.jpg"
+          alt=""
+          class="
+            w-40
+            shadow-xl
+            border-2 border-gray-500
+            rounded
+            transition
+            dark:transition
+            dark:border-gray-900
+          "
+        />
+      </nuxt-link>
     </div>
     <p class="mt-4 text-gray-500 font-normal">
       The free "<b>forever</b>" movie search engine
@@ -64,6 +78,11 @@
           py-2
           text-left
           relative
+          transition
+          dark:transition
+          dark:bg-red-900
+          dark:border-transparent
+          dark:text-white
         "
       >
         <span
@@ -117,7 +136,14 @@
               focus:transition
               placeholder-gray-600 placeholder-opacity-50
               disabled:bg-gray-200
-              disabled:cursor-wait
+              disabled:cursor-not-allowed
+              transition
+              dark:transition
+              dark:bg-gray-800
+              dark:border-gray-800
+              dark:text-white
+              dark:focus:ring-pink-900
+              dark:placeholder-gray-500
             "
             :class="{
               'ring-red-600 ring-2 border-transparent':
@@ -149,7 +175,12 @@
               disabled:text-gray-400
               disabled:bg-gray-50
               disabled:select-none
-              disabled:cursor-wait
+              disabled:cursor-not-allowed
+              transition
+              dark:transition
+              dark:bg-gray-700
+              dark:border-gray-700
+              dark:hover:text-gray-300
             "
             :disabled="busy.searching"
             @click.prevent.stop="search"
@@ -171,7 +202,7 @@
       >
         {{ selectedMovie ? selectedMovie.title : '' }}
       </h1>
-      <common-player :data="selectedMovie" />
+      <common-player :data="selectedMovie" @on-play="show.playing = true" />
     </div>
 
     <div v-if="results" id="results" class="my-8">
@@ -195,31 +226,61 @@
         </div>
       </div>
     </div>
+
+    <div
+      v-if="$device.isDesktop"
+      class="
+        fixed
+        z-50
+        transition-all
+        duration-300
+        right-8
+        cursor-pointer
+        light-bulb
+        top-0
+      "
+      :class="{
+        'top-0': show.bulb,
+        '-top-56': !show.bulb,
+      }"
+      @click.prevent.stop="
+        $colorMode.preference =
+          $colorMode.preference === 'dark' ? 'light' : 'dark'
+      "
+    >
+      <icon-bulb class="w-12 transform rotate-180 relative top-40" />
+    </div>
   </div>
 </template>
 
 <script>
 import {
   defineComponent,
+  onBeforeMount,
   onMounted,
   reactive,
   ref,
-  computed,
   useContext,
   useRoute,
   useRouter,
 } from '@nuxtjs/composition-api'
 import IconSearch from '~/assets/svg/icon-search.svg?inline'
 import IconGithub from '~/assets/svg/icon-github.svg?inline'
+import IconBulb from '~/assets/svg/icon-bulb.svg?inline'
 
 export default defineComponent({
-  components: { IconSearch, IconGithub },
+  components: { IconSearch, IconGithub, IconBulb },
+
   setup() {
     const busy = reactive({
       searching: false,
     })
     const form = ref({
       q: null,
+    })
+    const show = ref({
+      bulb: false,
+      playing: false,
     })
     const errors = ref(null)
     const results = ref(null)
@@ -228,12 +289,34 @@ export default defineComponent({
     const route = useRoute()
     const { $axios } = useContext()
 
+    /**
+     * Set input value if route param q exists
+     */
     onMounted(async () => {
       if (route.value.query.q) {
         form.value.q = route.value.query.q
         await search()
       }
     })
+
+    onBeforeMount(() => {
+      document.addEventListener('scroll', showBulb)
+    })
+
+    const showBulb = () => {
+      const scrollY = window.scrollY || window.pageYOffset
+      const $element = document.querySelector('#logo')
+      const elementPosition =
+        $element.getBoundingClientRect().top + scrollY + $element.clientHeight
+
+      // eslint-disable-next-line no-console
+      console.log(scrollY, elementPosition)
+      if (scrollY > elementPosition - 50) {
+        show.value.bulb = true
+      } else {
+        show.value.bulb = false
+      }
+    }
 
     /**
      * Search func
@@ -293,37 +376,32 @@ export default defineComponent({
       }
     }
 
+    /**
+     * Set selectec movie func
+     */
     const setSelectedMovie = (movie) => {
       if (movie) selectedMovie.value = movie
     }
 
-    const hideNotice = () => {
-      if (process.browser) {
-        localStorage.setItem('acceptedImportantNotice', true)
-      }
-    }
-
-    const checkImportantNotice = computed(() => {
-      if (process.browser) {
-        const acceptedImportantNotice = localStorage.getItem(
-          'acceptedImportantNotice'
-        )
-        return acceptedImportantNotice === 'true'
-      }
-      return false
-    })
-
     return {
       search,
+      show,
       busy,
       form,
       errors,
       results,
       setSelectedMovie,
       selectedMovie,
-      hideNotice,
-      checkImportantNotice,
     }
   },
 })
 </script>
+
+<style lang="postcss" scoped>
+.light-bulb::before {
+  @apply absolute bg-gray-200 top-0 left-1/2;
+  content: '';
+  width: 1px;
+  height: 160px;
+}
+</style>

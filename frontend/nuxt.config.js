@@ -28,6 +28,7 @@ export default {
     'nuxt-windicss',
     '@nuxtjs/google-fonts',
     '@nuxtjs/device',
+    '@nuxtjs/color-mode',
     '@nuxtjs/google-analytics',
     '@nuxtjs/composition-api/module',
   ],
@@ -36,6 +37,10 @@ export default {
 
   googleAnalytics: {
     id: 'UA-163272788-4',
+  },
+
+  colorMode: {
+    classSuffix: '',
   },
 
   googleFonts: {

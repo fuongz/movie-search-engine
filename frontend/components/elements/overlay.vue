@@ -14,14 +14,37 @@
         py-1
         px-2
         rounded
-        cursor-wait
+        cursor-not-allowed
         select-none
+        transition
+        dark:transition
+        dark:bg-gray-700
       "
     >
       <icon-loading
-        class="animate-spin h-5 w-5 text-pink-700 mr-2 loading-spin"
+        class="
+          animate-spin
+          h-5
+          w-5
+          text-pink-700
+          mr-2
+          loading-spin
+          transition
+          dark:transition
+          dark:text-pink-600
+        "
       />
-      <span class="text-xs tracking-tight font-medium text-gray-500">
+      <span
+        class="
+          text-xs
+          tracking-tight
+          font-medium
+          text-gray-500
+          transition
+          dark:transition
+          dark:text-gray-300
+        "
+      >
         Đang "mượn" link...
       </span>
     </div>

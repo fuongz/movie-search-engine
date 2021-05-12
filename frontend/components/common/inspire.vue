@@ -9,6 +9,11 @@
       rounded
       text-pink-600
       border border-pink-200
+      transition
+      dark:transition
+      dark:bg-gray-900
+      dark:text-pink-700
+      dark:border-pink-900
     "
   >
     <span class="font-semibold tracking-tight mr-2">📢</span>

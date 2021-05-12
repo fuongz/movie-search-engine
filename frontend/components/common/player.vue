@@ -31,7 +31,7 @@ export default defineComponent({
     },
   },
 
-  setup(props) {
+  setup(props, { emit }) {
     const playerRef = ref(null)
     const player = ref(null)
     const { $device } = useContext()
@@ -53,6 +53,7 @@ export default defineComponent({
             type: 'application/x-mpegURL',
           })
           player.value.play()
+          emit('on-play')
 
           const $ele = document.querySelector('#current-video')
           const y = $ele.getBoundingClientRect().top + window.pageYOffset - 60

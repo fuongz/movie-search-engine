@@ -1,11 +1,20 @@
 <template>
-  <div
-    v-if="data"
-    class="relative pb-4 md:pb-16 border-b border-gray-300 md:border-none"
-  >
-    <div class="relative rounded hidden md:block w-full h-72 movie__thumbnail">
+  <div v-if="data" class="relative border-b border-gray-300 md:border-none">
+    <div
+      class="
+        relative
+        rounded
+        hidden
+        md:block
+        overflow-hidden
+        w-full
+        movie__thumbnail
+        shadow-lg
+        h-72
+      "
+    >
       <img
-        class="w-full h-full object-cover shadow"
+        class="w-full h-full object-cover"
         :src="data.thumbnail"
         :alt="data.title"
       />
@@ -57,43 +66,20 @@
       class="
         text-left
         md:text-center
-        font-medium
+        font-semibold
         text-sm
         tracking-tight
-        md:pt-4
+        md:pt-2
         line-clamp-2
+        cursor-pointer
+        transition
+        hover:text-pink-600
+        hover:transition
       "
+      @click.prevent="$emit('on-play', data)"
     >
       {{ data.title }}
     </h5>
-
-    <div class="relative md:absolute bottom-0 w-full">
-      <button
-        class="
-          cursor-pointer
-          block
-          mt-4
-          w-full
-          rounded-sm
-          text-sm
-          font-medium
-          px-4
-          py-2
-          outline-none
-          bg-pink-100
-          text-pink-600
-          border-none
-          transition
-          hover:bg-pink-700
-          hover:text-white
-          hover:transition
-          focus:outline-none
-        "
-        @click.prevent="$emit('on-play', data)"
-      >
-        Xem phim
-      </button>
-    </div>
   </div>
 </template>
 <script>
