@@ -1,37 +1,5 @@
 <template>
   <div class="w-full max-w-5xl text-center mx-auto pt-16 xl:px-0 px-4">
-    <div
-      class="
-        fixed
-        top-0
-        z-50
-        text-left
-        md:text-center
-        bg-white
-        w-full
-        border-b border-pink-200
-        left-0
-        px-4
-        py-2
-        text-xs
-        md:text-sm
-        text-pink-600
-        bg-pink-50
-        flex
-        justify-center
-        items-center
-        transition
-        dark:transition
-        dark:bg-gray-900
-        dark:border-pink-900
-      "
-    >
-      <span>
-        Dự án này sinh ra cho mục đích nghiên cứu, nghiêm cấm thương mại hóa
-        dưới mọi hình thức.
-      </span>
-    </div>
-
     <div id="logo" class="flex justify-center">
       <nuxt-link to="/">
         <img
@@ -53,14 +21,24 @@
       The free "<b>forever</b>" movie search engine
     </p>
 
-    <div class="mt-4">
+    <div class="mt-4 flex items-center">
       <a
         href="https://github.com/senpp/movie-search-engine"
         target="_blank"
         rel="noopener noreferrer"
         title="senpp/movie-search-engine"
+        class="block mx-auto"
       >
-        <icon-github class="w-6 h-6 text-gray-300 fill-current" />
+        <icon-github
+          class="
+            w-6
+            h-6
+            text-gray-300
+            hover:text-gray-500
+            dark:hover:text-gray-100
+            fill-current
+          "
+        />
       </a>
     </div>
 
@@ -152,41 +130,65 @@
             :disabled="busy.searching"
             @keyup.enter="search"
           />
-          <button
+
+          <div
             class="
-              border
-              bg-gray-50
-              text-gray-400
-              py-1
-              px-2
-              rounded
               absolute
-              right-2
+              right-3
               top-1/2
               transform
               -translate-y-1/2
-              z-1
-              text-xs
-              transition
-              hover:transition
-              hover:bg-gray-100
-              hover:text-gray-600
-              focus:outline-none
-              disabled:text-gray-400
-              disabled:bg-gray-50
-              disabled:select-none
-              disabled:cursor-not-allowed
-              transition
-              dark:transition
-              dark:bg-gray-700
-              dark:border-gray-700
-              dark:hover:text-gray-300
+              flex
+              items-center
             "
-            :disabled="busy.searching"
-            @click.prevent.stop="search"
           >
-            enter
-          </button>
+            <div class="flex items-center">
+              <div class="overflow-hidden flex items-center">
+                <input
+                  id="smart-search"
+                  v-model="form.smartSearch"
+                  type="checkbox"
+                  class="input-checkbox"
+                />
+                <label for="smart-search" class="input-decorator" />
+              </div>
+              <label for="smart-search" class="input-label"> Phim lẻ </label>
+            </div>
+
+            <button
+              class="
+                border
+                bg-gray-50
+                text-gray-400
+                py-1
+                px-2
+                ml-2
+                rounded
+                z-1
+                text-xs
+                transition
+                hover:transition
+                hover:bg-gray-100
+                hover:text-gray-600
+                focus:outline-none
+                disabled:text-gray-400
+                disabled:bg-gray-50
+                disabled:select-none
+                disabled:cursor-not-allowed
+                transition
+                dark:transition
+                dark:bg-gray-700
+                dark:border-gray-700
+                dark:hover:bg-gray-600
+                dark:hover:text-gray-300
+                dark:disabled:bg-gray-800
+              "
+              :disabled="busy.searching"
+              @click.prevent.stop="search"
+            >
+              enter
+            </button>
+          </div>
         </div>
       </elements-overlay>
 
@@ -206,7 +208,7 @@
     </div>
 
     <div v-if="results" id="results" class="my-8">
-      <p class="text-left text-gray-700">
+      <p class="text-left text-gray-700 dark:text-gray-300">
         Có tất cả <b>{{ results.length }}</b> kết quả:
       </p>
       <div
@@ -233,22 +235,25 @@
         fixed
         z-50
         transition-all
-        duration-300
+        duration-500
         right-8
         cursor-pointer
         light-bulb
         top-0
       "
       :class="{
-        'top-0': show.bulb,
-        '-top-56': !show.bulb,
+        '-top-44 hover:-top-40': !show.bulb,
       }"
       @click.prevent.stop="
         $colorMode.preference =
           $colorMode.preference === 'dark' ? 'light' : 'dark'
       "
     >
-      <icon-bulb class="w-12 transform rotate-180 relative top-40" />
+      <icon-moon
+        v-if="$colorMode.preference !== 'dark'"
+        class="w-12 relative top-40"
+      />
+      <icon-sun v-else class="w-12 relative top-40" />
     </div>
   </div>
 </template>
@@ -263,13 +268,16 @@ import {
   useContext,
   useRoute,
   useRouter,
+  watch,
 } from '@nuxtjs/composition-api'
 import IconSearch from '~/assets/svg/icon-search.svg?inline'
 import IconGithub from '~/assets/svg/icon-github.svg?inline'
 import IconBulb from '~/assets/svg/icon-bulb.svg?inline'
+import IconSun from '~/assets/svg/icon-sun.svg?inline'
+import IconMoon from '~/assets/svg/icon-moon.svg?inline'
 
 export default defineComponent({
-  components: { IconSearch, IconGithub, IconBulb },
+  components: { IconSearch, IconGithub, IconBulb, IconSun, IconMoon },
 
   setup() {
     const busy = reactive({
@@ -277,6 +285,7 @@ export default defineComponent({
     })
     const form = ref({
       q: null,
+      smartSearch: false,
     })
     const show = ref({
       bulb: false,
@@ -293,11 +302,22 @@ export default defineComponent({
      * Set input value if route param q exists
      */
     onMounted(async () => {
+      if (route.value.query.smartSearch) {
+        form.value.smartSearch = route.value.query.smartSearch
+      }
+
       if (route.value.query.q) {
         form.value.q = route.value.query.q
         await search()
       }
     })
+
+    watch(
+      () => form.value.smartSearch,
+      (val) => {
+        setQuery('smartSearch', val === true || val === 'true' ? 1 : null)
+      }
+    )
 
     onBeforeMount(() => {
       document.addEventListener('scroll', showBulb)
@@ -309,13 +329,21 @@ export default defineComponent({
       const elementPosition =
         $element.getBoundingClientRect().top + scrollY + $element.clientHeight
 
-      // eslint-disable-next-line no-console
-      console.log(scrollY, elementPosition)
       if (scrollY > elementPosition - 50) {
         show.value.bulb = true
       } else {
         show.value.bulb = false
       }
+    }
+
+    const setQuery = (key, val) => {
+      const currentQuery = route.value.query
+      router.push({
+        query: {
+          ...currentQuery,
+          [key]: val,
+        },
+      })
     }
 
     /**
@@ -325,18 +353,12 @@ export default defineComponent({
       try {
         errors.value = null
         if (!form.value.q || form.value.q === '') {
-          router.push({
-            query: {
-              q: null,
-            },
-          })
+          setQuery('q', null)
           throw new Error('Viết đại cái gì đó cũng được mà.')
         }
-        router.push({
-          query: {
-            q: form.value.q,
-          },
-        })
+
+        setQuery('q', form.value.q)
+
         if (process.browser) {
           let searchHistory = localStorage.getItem('searchHistory')
           let searchValues = []
@@ -354,7 +376,12 @@ export default defineComponent({
           )
         }
         busy.searching = true
-        const response = await $axios.get(`?q=${form.value.q}`)
+        const response = await $axios.get('/', {
+          params: {
+            q: form.value.q,
+            smartSearch: form.value.smartSearch,
+          },
+        })
         const responseBody = response.data
         if (Array.isArray(responseBody) && responseBody.length === 0) {
           throw new Error(

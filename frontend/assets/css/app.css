@@ -10,3 +10,37 @@ body {
 html.dark body {
   @apply bg-gray-900 text-white transition;
 }
+
+/* Custom */
+.input-checkbox {
+  @apply opacity-0 pointer-none absolute;
+  left: -999px;
+}
+
+.input-checkbox:checked ~ .input-decorator {
+  @apply border-pink-600;
+}
+
+.input-checkbox:checked ~ .input-decorator:before {
+  @apply bg-pink-500;
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M8.76,56.2c-6.38-6.34,3.26-16,9.64-9.69L38,65.88,80.56,23.29c6.38-6.38,16.07,3.32,9.69,9.69L42.84,80.37a6.83,6.83,0,0,1-9.65,0Z"/></svg>');
+}
+
+.input-label {
+  @apply ml-2 text-xs text-gray-500 cursor-pointer;
+}
+
+.input-decorator {
+  @apply border block border-gray-400 dark:border-gray-600 w-3.5 h-3.5 relative rounded cursor-pointer;
+}
+
+.input-decorator:before {
+  content: '';
+  @apply block bg-contain absolute;
+  background-position: 100%;
+  width: calc(100% - 0.125em);
+  height: calc(100% - 0.125em);
+  box-sizing: border-box;
+  top: 0.0625em;
+  left: 0.0625em;
+}

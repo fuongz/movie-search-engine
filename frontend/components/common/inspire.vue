@@ -28,8 +28,7 @@ export default defineComponent({
   setup() {
     const inspires = [
       'Tìm phim lẻ thì viết kiểu "conan tập 1000".',
-      'Dự án này sinh ra cho mục đích nghiên cứu, nghiêm cấm thương mại hóa dưới mọi hình thức.',
-      'Hiện tại mình chỉ lấy từ 01 nguồn phim là "phephim(.)xyz"',
+      'Hiện tại mình chỉ lấy từ 01 nguồn phim là "phephimz(.)net"',
     ]
 
     const inspire = ref<string>(

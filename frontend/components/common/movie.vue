@@ -13,12 +13,27 @@
         h-72
       "
     >
+      <div
+        v-if="data.isMovieSeries"
+        class="
+          absolute
+          bottom-0
+          w-full
+          text-center
+          bg-pink-900 bg-opacity-80
+          text-xs
+          py-1
+          text-white
+          z-20
+        "
+      >
+        Tập mới nhất - {{ data.lastEpisode }}
+      </div>
       <img
         class="w-full h-full object-cover"
         :src="data.thumbnail"
         :alt="data.title"
       />
-
       <div
         v-if="data.url"
         class="
@@ -26,6 +41,7 @@
           top-0
           left-0
           bg-gray-900 bg-opacity-50
+          z-10
           h-full
           w-full
           movie__thumbnail-overlay
