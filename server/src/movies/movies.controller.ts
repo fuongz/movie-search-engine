@@ -15,7 +15,10 @@ export class MoviesController {
   constructor(private moviesServices: MoviesService) {}
 
   @Get()
-  findAll(@Query('q') q: string): any {
+  findAll(
+    @Query('q') q: string,
+    @Query('smartSearch') smartSearch: boolean,
+  ): any {
     if (!q)
       throw new HttpException(
         {
@@ -23,8 +26,9 @@ export class MoviesController {
         },
         HttpStatus.NOT_FOUND,
       );
+
     return this.moviesServices
-      .search(q)
+      .search(q, smartSearch)
       .then((e) =>
         e.filter((e: any) => typeof e !== 'undefined' && e.cdn !== null),
       );
