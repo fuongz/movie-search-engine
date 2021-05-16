@@ -33,7 +33,7 @@ export default {
     '@nuxtjs/composition-api/module',
   ],
 
-  modules: ['@nuxtjs/axios', '@nuxtjs/svg'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/svg'],
 
   googleAnalytics: {
     id: 'UA-163272788-4',
@@ -56,6 +56,12 @@ export default {
 
   axios: {
     baseURL: process.env.API_URL,
+  },
+
+  auth: {
+    strategies: {
+      local: {},
+    },
   },
 
   build: {},

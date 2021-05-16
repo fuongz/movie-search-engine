@@ -115,37 +115,35 @@ export class MoviesService {
       }
 
       return Promise.all(
-        movies.map(
-          async (movie: any): Promise<Movie> => {
-            const currentEpisode = episode
-              ? episode
-              : movie.lastEpisode
-              ? movie.lastEpisode
-              : null;
-            const vid = await this.getEpisode(movie.url, currentEpisode);
-            if (vid !== null && vid.data !== null) {
-              const vod = 2;
-              const m3u8Url = `${vid.host}/vod/v${vod}/packaged:mp4/${vid.mid}/playlist.m3u8`;
-              return {
-                title:
-                  episode !== null
-                    ? `${movie.title} - Tập ${episode}`
-                    : movie.title,
-                titleEng:
-                  episode !== null
-                    ? `${movie.titleEng} - Episode ${episode}`
-                    : movie.titleEng,
-                thumbnail: movie.thumbnail,
-                url: m3u8Url,
-                cdn: vid.host,
-                currentEpisode: currentEpisode,
-                lastEpisode: movie.lastEpisode,
-                isMovieSeries: movie.isMovieSeries,
-                isMovieTrailer: movie.isMovieTrailer,
-              };
-            }
-          },
-        ),
+        movies.map(async (movie: any): Promise<Movie> => {
+          const currentEpisode = episode
+            ? episode
+            : movie.lastEpisode
+            ? movie.lastEpisode
+            : null;
+          const vid = await this.getEpisode(movie.url, currentEpisode);
+          if (vid !== null && vid.data !== null) {
+            const vod = 2;
+            const m3u8Url = `${vid.host}/vod/v${vod}/packaged:mp4/${vid.mid}/playlist.m3u8`;
+            return {
+              title:
+                episode !== null
+                  ? `${movie.title} - Tập ${episode}`
+                  : movie.title,
+              titleEng:
+                episode !== null
+                  ? `${movie.titleEng} - Episode ${episode}`
+                  : movie.titleEng,
+              thumbnail: movie.thumbnail,
+              url: m3u8Url,
+              cdn: vid.host,
+              currentEpisode: currentEpisode,
+              lastEpisode: movie.lastEpisode,
+              isMovieSeries: movie.isMovieSeries,
+              isMovieTrailer: movie.isMovieTrailer,
+            };
+          }
+        }),
       );
     } catch (err) {
       return err.message;

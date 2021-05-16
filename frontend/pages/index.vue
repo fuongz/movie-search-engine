@@ -21,6 +21,8 @@
       The free "<b>forever</b>" movie search engine
     </p>
 
+    <button @click="login">Login</button>
+
     <div class="mt-4 flex items-center">
       <a
         href="https://github.com/senpp/movie-search-engine"
@@ -152,7 +154,7 @@
                 />
                 <label for="smart-search" class="input-decorator" />
               </div>
-              <label for="smart-search" class="input-label"> Phim lẻ </label>
+              <label for="smart-search" class="input-label"> Phim bộ </label>
             </div>
 
             <button
@@ -296,7 +298,7 @@ export default defineComponent({
     const selectedMovie = ref(null)
     const router = useRouter()
     const route = useRoute()
-    const { $axios } = useContext()
+    const { $axios, $auth } = useContext()
 
     /**
      * Set input value if route param q exists
@@ -410,6 +412,15 @@ export default defineComponent({
       if (movie) selectedMovie.value = movie
     }
 
+    const login = async () => {
+      try {
+        await $auth.loginWith('local')
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(err)
+      }
+    }
+
     return {
       search,
       show,
@@ -419,6 +430,7 @@ export default defineComponent({
       results,
       setSelectedMovie,
       selectedMovie,
+      login,
     }
   },
 })

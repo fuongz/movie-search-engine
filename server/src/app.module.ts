@@ -9,10 +9,13 @@ import configuration from './config/configuration';
 import { CommonModule } from './common/common.module';
 import { MoviesModule } from './movies/movies.module';
 import { APP_GUARD } from '@nestjs/core';
+import { AuthModule } from './app/auth/auth.module';
+import { AuthGuard } from './app/auth/auth.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       load: [configuration],
     }),
 
@@ -22,12 +25,17 @@ import { APP_GUARD } from '@nestjs/core';
     }),
 
     CommonModule,
+    AuthModule,
     MoviesModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
 })
