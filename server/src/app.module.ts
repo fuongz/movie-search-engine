@@ -24,7 +24,6 @@ import { APP_GUARD } from '@nestjs/core';
     CommonModule,
     MoviesModule,
   ],
-  controllers: [],
   providers: [
     {
       provide: APP_GUARD,

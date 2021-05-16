@@ -4,8 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { tap } from 'rxjs/operators';
 
 @Injectable()
