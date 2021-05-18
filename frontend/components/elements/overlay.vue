@@ -5,12 +5,15 @@
       class="
         flex
         absolute
+        w-full
+        h-full
         top-1/2
-        left-1/2
+        left-0
+        pl-4
         transform
-        -translate-y-1/2 -translate-x-1/2
+        -translate-y-1/2
         items-center
-        bg-white
+        bg-gray-200
         py-1
         px-2
         rounded
@@ -24,22 +27,20 @@
       <icon-loading
         class="
           animate-spin
-          h-5
-          w-5
-          text-pink-700
-          mr-2
+          h-6
+          w-6
+          text-gray-400
+          mr-4
           loading-spin
           transition
           dark:transition
-          dark:text-pink-600
         "
       />
       <span
         class="
-          text-xs
-          tracking-tight
-          font-medium
-          text-gray-500
+          tracking-wide
+          font-light font-mono
+          text-gray-700
           transition
           dark:transition
           dark:text-gray-300

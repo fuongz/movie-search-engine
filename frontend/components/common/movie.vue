@@ -83,12 +83,13 @@
         text-left
         md:text-center
         font-semibold
-        text-sm
+        text-gray-600 text-sm
         tracking-tight
         md:pt-2
         line-clamp-2
         cursor-pointer
         transition
+        dark:text-gray-200
         hover:text-pink-600
         hover:transition
       "

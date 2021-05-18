@@ -1,5 +1,6 @@
 import { defineConfig } from 'windicss/helpers'
 import colors from 'windicss/colors'
+import plugin from 'windicss/plugin'
 
 export default defineConfig({
   darkMode: 'class',
@@ -12,7 +13,7 @@ export default defineConfig({
   theme: {
     fontFamily: {
       sans: ['Inter'],
-      serif: ['Merriweather'],
+      mono: ['Source Code Pro'],
     },
 
     extend: {
@@ -22,5 +23,19 @@ export default defineConfig({
     },
   },
 
-  plugins: [require('windicss/plugin/line-clamp')],
+  shortcuts: {
+    centering:
+      'w-full max-w-5xl text-center flex min-h-screen m-auto items-center justify-center',
+  },
+
+  plugins: [
+    require('windicss/plugin/line-clamp'),
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        '.input-shadow': {
+          'box-shadow': '0 2px 6px rgb(0 0 0 / 5%)',
+        },
+      })
+    }),
+  ],
 })

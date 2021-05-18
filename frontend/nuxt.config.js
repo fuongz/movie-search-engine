@@ -6,7 +6,7 @@ export default {
   },
 
   head: {
-    title: 'Phim Phake: The free forever movie search engine',
+    title: 'Phim Phake | the free forever movie search engine',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -46,7 +46,7 @@ export default {
   googleFonts: {
     families: {
       Inter: true,
-      Merriweather: true,
+      'Source Code Pro': [300, 500, 600],
     },
     display: 'swap',
     subsets: '',
@@ -57,12 +57,4 @@ export default {
   axios: {
     baseURL: process.env.API_URL,
   },
-
-  auth: {
-    strategies: {
-      local: {},
-    },
-  },
-
-  build: {},
 }
