@@ -1,16 +1,15 @@
 <template>
-  <div v-if="data" class="relative border-b border-gray-300 md:border-none">
+  <div v-if="data" class="relative">
     <div
       class="
         relative
         rounded
-        hidden
-        md:block
         overflow-hidden
         w-full
         movie__thumbnail
         shadow-lg
-        h-72
+        h-auto
+        md:h-72
       "
     >
       <div
@@ -80,12 +79,11 @@
 
     <h5
       class="
-        text-left
-        md:text-center
+        text-center
         font-semibold
         text-gray-600 text-sm
         tracking-tight
-        md:pt-2
+        pt-2
         line-clamp-2
         cursor-pointer
         transition

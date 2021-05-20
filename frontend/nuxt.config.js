@@ -28,18 +28,23 @@ export default {
     'nuxt-windicss',
     '@nuxtjs/google-fonts',
     '@nuxtjs/device',
-    '@nuxtjs/color-mode',
     '@nuxtjs/google-analytics',
     '@nuxtjs/composition-api/module',
   ],
 
-  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/svg'],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    '@nuxtjs/svg',
+    '@nuxtjs/color-mode',
+  ],
 
   googleAnalytics: {
     id: 'UA-163272788-4',
   },
 
   colorMode: {
+    preference: 'dark',
     classSuffix: '',
   },
 

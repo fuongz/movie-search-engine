@@ -1,5 +1,19 @@
 <template>
-  <div class="centering">
+  <div
+    class="
+      w-full
+      max-w-5xl
+      text-center
+      flex
+      min-h-screen
+      mx-auto
+      pt-8
+      lg:pt-16
+      px-4
+      lg:px-0
+      transition-all
+    "
+  >
     <div class="w-full">
       <div id="logo" class="flex justify-center">
         <nuxt-link to="/">
@@ -60,6 +74,7 @@
         <elements-overlay :busy="busy.searching">
           <div>
             <input
+              id="search-input"
               v-model="form.q"
               type="text"
               placeholder="tên phim"
@@ -169,7 +184,7 @@
           class="
             grid
             gap-4
-            grid-cols-1
+            grid-cols-2
             md:grid-cols-3
             lg:grid-cols-4
             xl:grid-cols-5
@@ -181,33 +196,6 @@
           </div>
         </div>
       </div>
-
-      <div
-        v-if="$device.isDesktop"
-        class="
-          fixed
-          z-50
-          transition-all
-          duration-500
-          right-8
-          cursor-pointer
-          light-bulb
-          top-0
-        "
-        :class="{
-          '-top-44 hover:-top-40': !show.bulb,
-        }"
-        @click.prevent.stop="
-          $colorMode.preference =
-            $colorMode.preference === 'dark' ? 'light' : 'dark'
-        "
-      >
-        <icon-moon
-          v-if="$colorMode.preference !== 'dark'"
-          class="w-12 relative top-40"
-        />
-        <icon-sun v-else class="w-12 relative top-40" />
-      </div>
     </div>
   </div>
 </template>
@@ -215,7 +203,6 @@
 <script>
 import {
   defineComponent,
-  onBeforeMount,
   onMounted,
   reactive,
   ref,
@@ -226,12 +213,9 @@ import {
 } from '@nuxtjs/composition-api'
 import IconSearch from '~/assets/svg/icon-search.svg?inline'
 import IconGithub from '~/assets/svg/icon-github.svg?inline'
-import IconBulb from '~/assets/svg/icon-bulb.svg?inline'
-import IconSun from '~/assets/svg/icon-sun.svg?inline'
-import IconMoon from '~/assets/svg/icon-moon.svg?inline'
 
 export default defineComponent({
-  components: { IconSearch, IconGithub, IconBulb, IconSun, IconMoon },
+  components: { IconSearch, IconGithub },
 
   setup() {
     const busy = reactive({
@@ -242,7 +226,6 @@ export default defineComponent({
       smartSearch: true,
     })
     const show = ref({
-      bulb: false,
       playing: false,
     })
     const errors = ref(null)
@@ -272,23 +255,6 @@ export default defineComponent({
         setQuery('smartSearch', val === true || val === 'true' ? 1 : null)
       }
     )
-
-    onBeforeMount(() => {
-      document.addEventListener('scroll', showBulb)
-    })
-
-    const showBulb = () => {
-      const scrollY = window.scrollY || window.pageYOffset
-      const $element = document.querySelector('#logo')
-      const elementPosition =
-        $element.getBoundingClientRect().top + scrollY + $element.clientHeight
-
-      if (scrollY > elementPosition - 50) {
-        show.value.bulb = true
-      } else {
-        show.value.bulb = false
-      }
-    }
 
     const setQuery = (key, val) => {
       const currentQuery = route.value.query
@@ -379,13 +345,6 @@ export default defineComponent({
 </script>
 
 <style lang="postcss" scoped>
-.light-bulb::before {
-  @apply absolute bg-gray-200 top-0 left-1/2;
-  content: '';
-  width: 1px;
-  height: 160px;
-}
-
 .caret-pink-400 {
   caret-color: theme('colors.pink.400');
 }

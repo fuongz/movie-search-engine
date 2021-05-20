@@ -23,11 +23,6 @@ export default defineConfig({
     },
   },
 
-  shortcuts: {
-    centering:
-      'w-full max-w-5xl text-center flex min-h-screen m-auto items-center justify-center',
-  },
-
   plugins: [
     require('windicss/plugin/line-clamp'),
     plugin(({ addUtilities }) => {
