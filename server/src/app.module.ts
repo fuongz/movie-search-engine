@@ -10,7 +10,6 @@ import { CommonModule } from './common/common.module';
 import { MoviesModule } from './movies/movies.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './app/auth/auth.module';
-import { AuthGuard } from './app/auth/auth.guard';
 
 @Module({
   imports: [
@@ -32,10 +31,6 @@ import { AuthGuard } from './app/auth/auth.guard';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
     },
   ],
 })

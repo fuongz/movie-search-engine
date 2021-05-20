@@ -1,67 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseStrategy } from '../../utils/auth/strategies/supabase/SupabaseStrategy';
+import RequestWithUser from './requestWithUser.interface';
 
 @Injectable()
 export class AuthService {
-  private supabase: SupabaseClient;
+  constructor(private supabaseStrategy: SupabaseStrategy) {}
 
-  constructor(private configService: ConfigService) {
-    this.supabase = createClient(
-      this.configService.get<string>('SUPABASE_URL'),
-      this.configService.get<string>('SUPABASE_KEY'),
-    );
+  public async signin(credentials: any) {
+    return await this.supabaseStrategy.signin(credentials);
   }
 
-  public signin(credentials: any) {
-    return new Promise(async (resolve, reject) => {
-      const { session, error } = await this.supabase.auth.signIn(credentials);
-      if (error) {
-        return reject(error);
-      }
-      return resolve(session);
-    });
+  public async me(req: RequestWithUser) {
+    return await this.supabaseStrategy.me(req);
   }
 
-  public signup(formData: any) {
-    return new Promise(async (resolve, reject) => {
-      const { session, error } = await this.supabase.auth.signIn(formData);
-      if (error) {
-        return reject(error);
-      }
-      return resolve(session);
-    });
-  }
-
-  public signout() {
-    return new Promise(async (resolve, reject) => {
-      const { error } = await this.supabase.auth.signOut();
-      if (error) {
-        return reject(error);
-      }
-      return resolve({});
-    });
-  }
-
-  public me(authorization: string) {
-    return new Promise(async (resolve, reject) => {
-      const jwt = authorization.replace(/^Bearer\s/, '');
-      const { user, error } = await this.supabase.auth.api.getUser(jwt);
-      if (error) {
-        return reject(error);
-      }
-      return resolve(user);
-    });
-  }
-
-  public resetPassword(email: string) {
-    return new Promise(async (resolve, reject) => {
-      const { data, error } =
-        await this.supabase.auth.api.resetPasswordForEmail(email);
-      if (error) {
-        return reject(error);
-      }
-      return resolve(data);
-    });
+  public async signout(req: RequestWithUser) {
+    return await this.supabaseStrategy.signout(req);
   }
 }

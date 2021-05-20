@@ -1,14 +1,5 @@
-import { CanActivate, Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
-  canActivate(): boolean | Promise<boolean> | Observable<boolean> {
-    this.setAuthenticated();
-    return true;
-  }
-
-  setAuthenticated(): boolean | any {
-    return true;
-  }
-}
+export default class SupabaseAuthGuard extends AuthGuard('supabase') {}
