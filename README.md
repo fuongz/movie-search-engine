@@ -1,5 +1,1 @@
-# 🔍 Movie Search Engine
-
-## Available Sources
-
-- phephim(.)xyz
+# Project deprecated in favor of [phake.dev/movies](https://github.com/phakedev/phim)
